@@ -12,15 +12,15 @@ user_manager = UserRepository()
 @user_controller.route('/users', methods=['POST'])
 def create_user():
     data = request.get_json()
-    email = data['email']
-    first_name = data['first_name']
-    last_name = data['last_name']
+    email = data.get('email')
+    first_name = data.get('first_name')
+    last_name = data.get('last_name')
     user = User(email, first_name, last_name)
     valid, msg = user_manager.create_user(user)
     if not valid:
         return jsonify({"message": "User not created", "error": msg})
     return jsonify(user.__dict__)
-
+    
 
 @user_controller.route('/users', methods=['GET'])
 def get_users():
@@ -30,14 +30,18 @@ def get_users():
 
 @user_controller.route('/users/<user_id>', methods=['GET'])
 def get_specific(user_id):
-    user = user_manager.get_user_details(user_id)
-    return jsonify(user)
+    valid, msg = user_manager.get_user_details(user_id)
+    if not valid:
+        return jsonify({"message": "User not found", "error": msg})
+    return jsonify(msg)
 
 
 @user_controller.route('/users/<user_id>', methods=['PUT'])
 def update_users(user_id):
-    old_data = user_manager.get_user_details(user_id)
-    print(old_data)
+    valid, old_data = user_manager.get_user_details(user_id)
+    if not valid:
+        msg = old_data
+        return jsonify({"message": "User not updated", "error": msg})
     data = request.get_json()
     email = data['email']
     first_name = data['first_name']

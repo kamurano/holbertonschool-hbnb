@@ -25,9 +25,9 @@ class BaseRepository(IPersistenceManager):
     def get(self, entity_id, entity_type):
         data = self._load()
         if entity_type not in data:
-            return None
+            return False
         if entity_id not in data[entity_type]:
-            return None
+            return False
         return data[entity_type][entity_id]
 
     def update(self, entity):
@@ -35,9 +35,9 @@ class BaseRepository(IPersistenceManager):
         entity_type = type(entity).__name__
         data = self._load()
         if entity_type not in data:
-            return None
+            return False
         if entity_id not in data[entity_type]:
-            return None
+            return False
         data[entity_type][entity_id] = entity.__dict__
         with open(self.FILE_PATH, "w") as file:
             json.dump(data, file)
@@ -45,9 +45,9 @@ class BaseRepository(IPersistenceManager):
     def delete(self, entity_id, entity_type):
         data = self._load()
         if entity_type not in data:
-            return None
+            return False
         if entity_id not in data[entity_type]:
-            return None
+            return False
         del data[entity_type][entity_id]
         with open(self.FILE_PATH, "w") as file:
             json.dump(data, file)

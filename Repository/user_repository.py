@@ -1,6 +1,4 @@
-from Repository.base_repository import BaseRepository
 from Service.user_service import UserService
-from Model.user import User
 
 
 class UserRepository(UserService):
@@ -12,9 +10,10 @@ class UserRepository(UserService):
         return list(data["User"].values())
     
     def get_user_details(self, user_id):
-        
-        return self.get(user_id, "User")
-        
+        user = self.get(user_id, "User")
+        if not user:
+            return (False, "User not found")
+        return (True, user)
     
     def create_user(self, user):
         valid, msg = self.validate_email(user.email)

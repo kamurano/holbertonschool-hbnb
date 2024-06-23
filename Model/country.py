@@ -1,5 +1,4 @@
 class Country:
-    def __init__(self, name, country_code, cities):
+    def __init__(self, name, country_code):
         self.name = name
         self.country_code = country_code
-        self.cities = cities
