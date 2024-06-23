@@ -1,2 +1,7 @@
 /env
 /__pycache__
+/Model/__pycache__
+/Persistence/__pycache__
+/Repository/__pycache__
+/Service/__pycache__
+/data.json
