@@ -54,8 +54,19 @@ class CityRepository(CityService):
             return (False, "City not found")
         return (True, city)
         
-    def update_city(self, city_id):
-        pass
+    def update_city(self, city_id, city):
+        valid, msg = self.validate_country(city.country_code)
+        if not valid:
+            return (False, msg)
+        data = self._load()
+        if city_id not in data["City"]:
+            return (False, "City not found")
+        self.update(city)
+        return (True, None)
 
     def delete_city(self, city_id):
-        pass
+        data = self._load()
+        if city_id not in data["City"]:
+            return (False, "City not found")
+        self.delete(city_id, "City")
+        return (True, None)
