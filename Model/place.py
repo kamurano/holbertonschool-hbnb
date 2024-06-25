@@ -2,6 +2,7 @@ from basemodel import BaseModel
 
 class Place(BaseModel):
     def __init__(self, name, description, address, city, latitude, longitude, host_id, number_of_rooms, number_of_bathrooms, price_per_night, max_guests, amenity_ids):
+        super().__init__()
         self.name = name
         self.description = description
         self.address = address
