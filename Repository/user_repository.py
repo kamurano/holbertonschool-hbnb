@@ -19,7 +19,8 @@ class UserRepository(UserService):
         valid, msg = self.validate_email(user.email)
         if not valid:
             return (False, msg)
-        if not self.validate_creds(user.first_name, user.last_name):
+        valid, msg = self.validate_creds(user.first_name, user.last_name)
+        if not valid:
             return (False, msg)
         self.save(user)
         return (True, user.id)

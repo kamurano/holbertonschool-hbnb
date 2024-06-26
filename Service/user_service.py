@@ -2,6 +2,7 @@ import re
 
 from Repository.base_repository import BaseRepository
 
+
 class UserService(BaseRepository):
     def __init__(self):
         super().__init__()
@@ -18,5 +19,5 @@ class UserService(BaseRepository):
         
     def validate_creds(self, fname, sname):
         if fname and sname:
-            return True
-        return False
+            return (True, None)
+        return (False, "Please enter both first name and last name.")

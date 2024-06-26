@@ -1,18 +1,75 @@
-class PlaceRepository:
-    def __init__(self, places):
-        self.places = places
-        # ya da her neyse
+from Service.place_service import PlaceService
 
-    def __str__():
-        pass
-    def get_all_places():
-        pass
-    def get_place_details(place_id):
-        pass
-    def create_new_place(name, description, adress, city_id, latitude, longitude, host_id, number_of_rooms, number_of_bathrooms, price_per_night, max_guests, amenity_ids):
-        pass
-    def update_place(place_id):
-        pass
-    def delete_place(place_id):
-        pass
+
+class PlaceRepository(PlaceService):
+    def __init__(self):
+        super().__init__()
+    
+    def get_all_places(self):
+        data = self._load()
+        return list(data["Place"].values())
+    
+    def get_place_details(self, place_id):
+        place = self.get(place_id, "Place")
+        if not place:
+            return (False, "Place not found")
+        return (True, place)
+    
+    def create_place(self, place):
+        valid, msg = self.validete_place(place.address)
+        if not valid:
+            return (False, msg)
+        valid, msg = self.validate_cootdinates(place.latitude, place.longitude)
+        if not valid:
+            return (False, msg)
+        valid, msg = self.validate_quantity(place.number_of_rooms, place.number_of_bathrooms, place.max_guests)
+        if not valid:
+            return (False, msg)
+        valid, msg = self.validate_price(place.price_per_night)
+        if not valid:
+            return (False, msg)
+        valid, msg = self.validate_city(place.city_id)
+        if not valid:
+            return (False, msg)
+        valid, msg = self.validate_host(place.host_id)
+        if not valid:
+            return (False, msg)
+        valid, msg = self.validate_amentities(place.amenity_ids)
+        if not valid:
+            return (False, msg)
+        self.save(place)
+        return (True, place.id)
+    
+    def update_place(self, place_id, place):
+        valid, msg = self.validate_place(place)
+        if not valid:
+            return (False, msg)
+        valid, msg = self.validate_cootdinates(place.latitude, place.longitude)
+        if not valid:
+            return (False, msg)
+        valid, msg = self.validate_quantity(place.number_of_rooms, place.number_of_bathrooms, place.max_guests)
+        if not valid:
+            return (False, msg)
+        valid, msg = self.validate_price(place.price_per_night)
+        if not valid:
+            return (False, msg)
+        valid, msg = self.validate_city(place.city_id)
+        if not valid:
+            return (False, msg)
+        valid, msg = self.validate_amentities(place.amenity_ids)
+        if not valid:
+            return (False, msg)
+        data = self._load()
+        if place_id not in data["Place"]:
+            return (False, "Place not found")
+        self.update(place)
+        return (True, None)
+        
+    
+    def delete_place(self, place_id):
+        data = self._load()
+        if place_id not in data["Place"]:
+            return (False, "Place not found")
+        self.delete(place_id, "Place")
+        return (True, None)
     
