@@ -16,32 +16,33 @@ def create_user():
     first_name = data.get('first_name')
     last_name = data.get('last_name')
     user = User(email, first_name, last_name)
-    valid, msg = user_manager.create_user(user)
+    valid, msg, status_code = user_manager.create_user(user)
     if not valid:
-        return jsonify({"message": "User not created", "error": msg})
-    return jsonify(user.__dict__)
+        return jsonify({"message": "User not created", "error": msg}), status_code
+    return jsonify(user.__dict__), 201
     
 
 @user_controller.route('/users', methods=['GET'])
 def get_users():
     users = user_manager.get_users()
-    return jsonify(users)
+    return jsonify(users), 200
 
 
 @user_controller.route('/users/<user_id>', methods=['GET'])
 def get_specific(user_id):
-    valid, msg = user_manager.get_user_details(user_id)
+    valid, msg, status_code = user_manager.get_user_details(user_id)
     if not valid:
-        return jsonify({"message": "User not found", "error": msg})
-    return jsonify(msg)
+        return jsonify({"message": "User not found", "error": msg}), status_code
+    user = msg
+    return jsonify(user), 200
 
 
 @user_controller.route('/users/<user_id>', methods=['PUT'])
 def update_users(user_id):
-    valid, old_data = user_manager.get_user_details(user_id)
+    valid, old_data, status_code = user_manager.get_user_details(user_id)
     if not valid:
         msg = old_data
-        return jsonify({"message": "User not updated", "error": msg})
+        return jsonify({"message": "User not updated", "error": msg}), status_code
     data = request.get_json()
     email = data['email']
     first_name = data['first_name']
@@ -51,15 +52,15 @@ def update_users(user_id):
     user.id = user_id
     user.created_at = old_data["created_at"]
     user.updated_at = datetime.now().isoformat()
-    valid, msg = user_manager.update_user(user_id, user)
+    valid, msg, status_code = user_manager.update_user(user_id, user)
     if not valid:
-        return jsonify({"message": "User not updated", "error": msg})
-    return jsonify(user.__dict__)
+        return jsonify({"message": "User not updated", "error": msg}), status_code
+    return jsonify(user.__dict__), 200
 
 
 @user_controller.route('/users/<user_id>', methods=['DELETE'])
 def delete_users(user_id):
-    valid, msg = user_manager.delete_user(user_id)
+    valid, msg, status_code = user_manager.delete_user(user_id)
     if not valid:
-        return jsonify({"message": "User not deleted", "error": msg})
-    return jsonify({"message": "User deleted successfully"})
+        return jsonify({"message": "User not deleted", "error": msg}), status_code
+    return jsonify({"message": "User deleted successfully"}), 204

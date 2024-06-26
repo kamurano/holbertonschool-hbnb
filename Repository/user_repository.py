@@ -12,34 +12,34 @@ class UserRepository(UserService):
     def get_user_details(self, user_id):
         user = self.get(user_id, "User")
         if not user:
-            return (False, "User not found")
-        return (True, user)
+            return (False, "User not found", 404)
+        return (True, user, 200)
     
     def create_user(self, user):
-        valid, msg = self.validate_email(user.email)
+        valid, msg, status_code = self.validate_email(user.email)
         if not valid:
-            return (False, msg)
-        valid, msg = self.validate_creds(user.first_name, user.last_name)
+            return (False, msg, status_code)
+        valid, msg, status_code = self.validate_creds(user.first_name, user.last_name)
         if not valid:
-            return (False, msg)
+            return (False, msg, status_code)
         self.save(user)
-        return (True, user.id)
+        return (True, user.id, 201)
     
     def update_user(self, user_id, user):
-        valid, msg = self.validate_email(user.email)
+        valid, msg, status_code = self.validate_email(user.email)
         if not valid:
-            return (False, msg)
+            return (False, msg, status_code)
         if not self.validate_creds(user.first_name, user.last_name):
-            return (False, msg)
+            return (False, msg, status_code)
         data = self._load()
         if user_id not in data["User"]:
-            return (False, "User not found")
+            return (False, "User not found", 404)
         self.update(user)
-        return (True, None)
+        return (True, None, 200)
     
     def delete_user(self, user_id):
         data = self._load()
         if user_id not in data["User"]:
-            return (False, "User not found")
+            return (False, "User not found", 404)
         self.delete(user_id, "User")
-        return (True, None)
+        return (True, None, 204)
