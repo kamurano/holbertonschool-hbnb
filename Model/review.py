@@ -1,6 +1,6 @@
-from basemodel import BaseModel
+from Model.basemodel import BaseModel
 
-class Reviews(BaseModel):
+class Review(BaseModel):
     def __init__(self, place_id, user_id, rating, comment):
         super().__init__()
         self.place_id = place_id

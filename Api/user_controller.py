@@ -47,7 +47,6 @@ def update_users(user_id):
     email = data['email']
     first_name = data['first_name']
     last_name = data['last_name']
-    
     user = User(email, first_name, last_name)
     user.id = user_id
     user.created_at = old_data["created_at"]
@@ -63,4 +62,4 @@ def delete_users(user_id):
     valid, msg, status_code = user_manager.delete_user(user_id)
     if not valid:
         return jsonify({"message": "User not deleted", "error": msg}), status_code
-    return jsonify({"message": "User deleted successfully"}), 204
+    return jsonify({"message": "User deleted successfully"}), 200

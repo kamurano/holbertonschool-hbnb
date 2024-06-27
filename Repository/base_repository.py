@@ -55,3 +55,7 @@ class BaseRepository(IPersistenceManager):
     def _load(self):
         with open(self.FILE_PATH, "r") as file:
             return json.load(file)
+        
+    def _write(self, data):
+        with open(self.FILE_PATH, "w") as file:
+            json.dump(data, file)

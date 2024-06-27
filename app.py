@@ -4,7 +4,6 @@ from Api.city_controller import city_controller
 from Api.amenity_controller import amenity_controller
 from Api.place_controller import place_controller
 from Api.review_controller import review_controller
-from Api.review_controller
 
 app = flask.Flask(__name__)
 
